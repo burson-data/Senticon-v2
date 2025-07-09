@@ -1,0 +1,10 @@
+streamlit
+playwright
+playwright-stealth
+beautifulsoup4
+newspaper3k
+pandas
+openpyxl
+google-generativeai
+requests
+lxml
