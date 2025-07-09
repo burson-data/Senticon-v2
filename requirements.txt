@@ -1,6 +1,6 @@
 streamlit
 playwright
-playwright-stealth
+playwright-stealth==1.0.6
 beautifulsoup4
 newspaper3k
 pandas
