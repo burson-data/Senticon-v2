@@ -9,3 +9,4 @@ google-generativeai
 requests
 lxml
 setuptools
+lxml_html_clean
