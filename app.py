@@ -15,6 +15,22 @@ from journalist_detector import JournalistDetector
 from summarizer import ArticleSummarizer
 from config import GEMINI_API_KEY
 
+import subprocess
+import sys
+
+def install_playwright():
+ try:
+     subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
+     subprocess.run([sys.executable, "-m", "playwright", "install-deps"], check=True)
+ except:
+     pass
+
+# Run once at startup
+if not os.path.exists("/tmp/playwright_installed"):
+ install_playwright()
+ open("/tmp/playwright_installed", "w").close()
+
+
 class NewsAnalyzerApp:
     def __init__(self):
         self.scraper = NewsScraper()
