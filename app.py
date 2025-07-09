@@ -17,19 +17,40 @@ from config import GEMINI_API_KEY
 
 import subprocess
 import sys
+from pathlib import Path
 
-def install_playwright():
+# Check if we're running on Streamlit Cloud
+def is_streamlit_cloud():
+ return os.getenv("STREAMLIT_SHARING_MODE") is not None or "streamlit.io" in os.getenv("HOSTNAME", "")
+ 
+ # Install Playwright and dependencies
+ @st.cache_resource
+def setup_playwright():
+ """Setup Playwright for Streamlit Cloud"""
  try:
-     subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], check=True)
-     subprocess.run([sys.executable, "-m", "playwright", "install-deps"], check=True)
- except:
-     pass
+     if is_streamlit_cloud():
+         # Install playwright and chromium
+         subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], 
+                      check=True, capture_output=True)
+         
+         # Try to install deps (might fail on Streamlit Cloud, but packages.txt should handle it)
+         try:
+             subprocess.run([sys.executable, "-m", "playwright", "install-deps", "chromium"], 
+                          check=True, capture_output=True)
+         except:
+             pass  # packages.txt should handle dependencies
+             
+     return True
+ except Exception as e:
+     st.error(f"Failed to setup Playwright: {str(e)}")
+     return False
 
-# Run once at startup
-if not os.path.exists("/tmp/playwright_installed"):
- install_playwright()
- open("/tmp/playwright_installed", "w").close()
-
+# Run setup
+if is_streamlit_cloud():
+ setup_success = setup_playwright()
+ if not setup_success:
+     st.error("⚠️ Playwright setup failed. Please check deployment configuration.")
+     st.stop()
 
 class NewsAnalyzerApp:
     def __init__(self):
