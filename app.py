@@ -25,25 +25,25 @@ def is_streamlit_cloud():
  
  # Install Playwright and dependencies
  @st.cache_resource
-def setup_playwright():
- """Setup Playwright for Streamlit Cloud"""
- try:
-     if is_streamlit_cloud():
-         # Install playwright and chromium
-         subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], 
-                      check=True, capture_output=True)
-         
-         # Try to install deps (might fail on Streamlit Cloud, but packages.txt should handle it)
-         try:
-             subprocess.run([sys.executable, "-m", "playwright", "install-deps", "chromium"], 
-                          check=True, capture_output=True)
-         except:
-             pass  # packages.txt should handle dependencies
-             
-     return True
- except Exception as e:
-     st.error(f"Failed to setup Playwright: {str(e)}")
-     return False
+ def setup_playwright():
+  """Setup Playwright for Streamlit Cloud"""
+  try:
+      if is_streamlit_cloud():
+          # Install playwright and chromium
+          subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"], 
+                       check=True, capture_output=True)
+          
+          # Try to install deps (might fail on Streamlit Cloud, but packages.txt should handle it)
+          try:
+              subprocess.run([sys.executable, "-m", "playwright", "install-deps", "chromium"], 
+                           check=True, capture_output=True)
+          except:
+              pass  # packages.txt should handle dependencies
+              
+      return True
+  except Exception as e:
+      st.error(f"Failed to setup Playwright: {str(e)}")
+      return False
 
 # Run setup
 if is_streamlit_cloud():
